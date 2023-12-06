@@ -23,4 +23,10 @@ public class KafkaTopicConfig {
         return TopicBuilder.name(K_LINE_TRADE_DATA_TOPIC)
                 .build();
     }
+
+    @Bean
+    public NewTopic lineChannelTopic() {
+        return TopicBuilder.name(K_LINE_TRADE_DATA_TOPIC)
+                .build();
+    }
 }

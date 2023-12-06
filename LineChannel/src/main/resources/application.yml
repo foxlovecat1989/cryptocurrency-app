@@ -1,0 +1,13 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: line-bot
+  kafka:
+    bootstrap-servers: localhost:9092
+
+line.bot:
+  channel-token: OIPmYKSybVUZ8WJvBt2+ZBFEF1Plp0/6kXhwP++GAG5OP/6FTQvZflONXsgT8ByZ+XVRLvFMtGjZQoyCpcpsuLaeBBun4bqQjCn9nI5sBS7XtcfRPrcE7loXkR6hIvCUUMZm/ZUX9w7Nccrtlhvf0QdB04t89/1O/w1cDnyilFU=
+  channel-secret: 0f245b58eb09ddc6f15e7ab0c3d5160a
+  algorithm: HmacSHA256
