@@ -1,16 +1,18 @@
 package com.ed.tradedata.service;
 
 import com.binance.connector.client.WebSocketStreamClient;
-import com.ed.tradedata.domain.DiffDepthTradeData;
-import com.ed.tradedata.domain.KLineTradeData;
-import com.ed.tradedata.producer.DiffDepthTradeDataProducer;
-import com.ed.tradedata.producer.KLineTradeDataProducer;
-import com.ed.utils.JsonUtils;
+import com.ed.tradedata.model.dto.DiffDepthTradeDataDto;
+import com.ed.tradedata.model.dto.KLineTradeDataDto;
+import com.ed.tradedata.kafka.producer.DiffDepthTradeDataProducer;
+import com.ed.tradedata.kafka.producer.KLineTradeDataProducer;
+import com.ed.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.ed.tradedata.domain.enums.Symbol.BTCUSDT;
+import java.util.Optional;
+
+import static com.ed.tradedata.model.enums.Symbol.BTCUSDT;
 
 @Service
 @Slf4j
@@ -24,18 +26,20 @@ public class WebSocketStreamService {
     private final KLineTradeDataProducer kLineTradeDataProducer;
 
     public void processDiffDepthTradeDataStream() {
-        int streamId = webSocketStreamClient.diffDepthStream(BTCUSDT.getSymbol(), ONE_THOUSAND_MILLISECONDS, resp -> {
-            JsonUtils.objectFromJson(resp, DiffDepthTradeData.class)
-                    .ifPresent(diffDepthTradeDataProducer::publishDiffDepthTradeData);
-        });
+        int streamId = webSocketStreamClient.diffDepthStream(
+                BTCUSDT.getSymbol(),
+                ONE_THOUSAND_MILLISECONDS,
+                resp -> Optional.ofNullable(JsonUtils.jsonToObject(resp, DiffDepthTradeDataDto.class))
+                        .ifPresent(diffDepthTradeDataProducer::publishDiffDepthTradeData));
         // TODO: save streamId to redis
     }
 
     public void processKLineTradeDataStream() {
-        int streamId = webSocketStreamClient.klineStream(BTCUSDT.getSymbol(), ONE_SECOND_INTERVAL, resp -> {
-            JsonUtils.objectFromJson(resp, KLineTradeData.class)
-                    .ifPresent(kLineTradeDataProducer::publishKLineTradeData);
-        });
+        int streamId = webSocketStreamClient.klineStream(
+                BTCUSDT.getSymbol(),
+                ONE_SECOND_INTERVAL,
+                resp -> Optional.ofNullable( JsonUtils.jsonToObject(resp, KLineTradeDataDto.class))
+                         .ifPresent(kLineTradeDataProducer::publishKLineTradeData));
         // TODO: save streamId to redis
     }
 

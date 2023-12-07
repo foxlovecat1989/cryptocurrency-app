@@ -17,12 +17,14 @@ public class HttpResponse {
     private Date timeStamp;
     private int httpStatusCode;
     private HttpStatus httpStatus;
+    private String errorCode;
     private String reason;
     private String message;
 
-    public HttpResponse(int httpStatusCode, HttpStatus httpStatus, String reason, String message) {
+    public HttpResponse(int httpStatusCode, HttpStatus httpStatus, String reason, String message, String errorCode) {
         this.timeStamp = new Date();
         this.httpStatusCode = httpStatusCode;
+        this.errorCode = errorCode;
         this.httpStatus = httpStatus;
         this.reason = reason;
         this.message = message;
